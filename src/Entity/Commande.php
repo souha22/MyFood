@@ -34,20 +34,35 @@ class Commande
      */
     private $statut;
 
-    /**
-     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="id_commande")
-     */
-    private $ligneCommandes;
+
 
     /**
      * @ORM\OneToOne(targetEntity=Livraison::class, cascade={"persist", "remove"})
      */
     private $id_livraison;
 
+    /**
+     * @ORM\OneToMany(targetEntity=LigneCommandeMenu::class, mappedBy="commande")
+     */
+    private $ligneCommandeMenus;
+
+    /**
+     * @ORM\OneToMany(targetEntity=LigneCommandeProduit::class, mappedBy="commande")
+     */
+    private $ligneCommandeProduits;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="commandes")
+     */
+    private $utilisateur;
+
     public function __construct()
     {
-        $this->ligneCommandes = new ArrayCollection();
+        $this->ligneCommandeMenus = new ArrayCollection();
+        $this->ligneCommandeProduits = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -90,35 +105,7 @@ class Commande
         return $this;
     }
 
-    /**
-     * @return Collection|LigneCommande[]
-     */
-    public function getLigneCommandes(): Collection
-    {
-        return $this->ligneCommandes;
-    }
 
-    public function addLigneCommande(LigneCommande $ligneCommande): self
-    {
-        if (!$this->ligneCommandes->contains($ligneCommande)) {
-            $this->ligneCommandes[] = $ligneCommande;
-            $ligneCommande->setIdCommande($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLigneCommande(LigneCommande $ligneCommande): self
-    {
-        if ($this->ligneCommandes->removeElement($ligneCommande)) {
-            // set the owning side to null (unless already changed)
-            if ($ligneCommande->getIdCommande() === $this) {
-                $ligneCommande->setIdCommande(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getIdLivraison(): ?livraison
     {
@@ -128,6 +115,78 @@ class Commande
     public function setIdLivraison(?livraison $id_livraison): self
     {
         $this->id_livraison = $id_livraison;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LigneCommandeMenu[]
+     */
+    public function getLigneCommandeMenus(): Collection
+    {
+        return $this->ligneCommandeMenus;
+    }
+
+    public function addLigneCommandeMenu(LigneCommandeMenu $ligneCommandeMenu): self
+    {
+        if (!$this->ligneCommandeMenus->contains($ligneCommandeMenu)) {
+            $this->ligneCommandeMenus[] = $ligneCommandeMenu;
+            $ligneCommandeMenu->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneCommandeMenu(LigneCommandeMenu $ligneCommandeMenu): self
+    {
+        if ($this->ligneCommandeMenus->removeElement($ligneCommandeMenu)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommandeMenu->getCommande() === $this) {
+                $ligneCommandeMenu->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LigneCommandeProduit[]
+     */
+    public function getLigneCommandeProduits(): Collection
+    {
+        return $this->ligneCommandeProduits;
+    }
+
+    public function addLigneCommandeProduit(LigneCommandeProduit $ligneCommandeProduit): self
+    {
+        if (!$this->ligneCommandeProduits->contains($ligneCommandeProduit)) {
+            $this->ligneCommandeProduits[] = $ligneCommandeProduit;
+            $ligneCommandeProduit->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneCommandeProduit(LigneCommandeProduit $ligneCommandeProduit): self
+    {
+        if ($this->ligneCommandeProduits->removeElement($ligneCommandeProduit)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommandeProduit->getCommande() === $this) {
+                $ligneCommandeProduit->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

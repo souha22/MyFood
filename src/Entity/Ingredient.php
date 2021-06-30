@@ -34,6 +34,11 @@ class Ingredient
      */
     private $types;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
     public function __construct()
     {
         $this->recettes = new ArrayCollection();
@@ -107,6 +112,18 @@ class Ingredient
         if ($this->types->removeElement($type)) {
             $type->removeIdIngredient($this);
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

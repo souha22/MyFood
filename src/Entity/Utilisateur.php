@@ -59,10 +59,6 @@ class Utilisateur
      */
     private $restaurants;
 
-    /**
-     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="id_utilisateur")
-     */
-    private $ligneCommandes;
 
     /**
      * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="id_utilisateur")
@@ -79,6 +75,11 @@ class Utilisateur
      */
     private $reclamations;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="utilisateur")
+     */
+    private $commandes;
+
     public function __construct()
     {
         $this->restaurants = new ArrayCollection();
@@ -86,6 +87,7 @@ class Utilisateur
         $this->commentaires = new ArrayCollection();
         $this->avis = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
 
@@ -209,35 +211,6 @@ class Utilisateur
         return $this;
     }
 
-    /**
-     * @return Collection|LigneCommande[]
-     */
-    public function getLigneCommandes(): Collection
-    {
-        return $this->ligneCommandes;
-    }
-
-    public function addLigneCommande(LigneCommande $ligneCommande): self
-    {
-        if (!$this->ligneCommandes->contains($ligneCommande)) {
-            $this->ligneCommandes[] = $ligneCommande;
-            $ligneCommande->setIdUtilisateur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLigneCommande(LigneCommande $ligneCommande): self
-    {
-        if ($this->ligneCommandes->removeElement($ligneCommande)) {
-            // set the owning side to null (unless already changed)
-            if ($ligneCommande->getIdUtilisateur() === $this) {
-                $ligneCommande->setIdUtilisateur(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Commentaire[]
@@ -323,6 +296,36 @@ class Utilisateur
             // set the owning side to null (unless already changed)
             if ($reclamation->getIdUtilisateur() === $this) {
                 $reclamation->setIdUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commande[]
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+            $commande->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getUtilisateur() === $this) {
+                $commande->setUtilisateur(null);
             }
         }
 

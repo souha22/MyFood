@@ -50,16 +50,17 @@ class Menu
     private $id_offre;
 
     /**
-     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="id_menu")
+     * @ORM\ManyToMany(targetEntity=LigneCommandeMenu::class, mappedBy="menu")
      */
-    private $ligneCommandes;
+    private $ligneCommandeMenus;
 
 
 
     public function __construct()
     {
         $this->id_offre = new ArrayCollection();
-        $this->ligneCommandes = new ArrayCollection();
+        $this->ligneCommandeMenus = new ArrayCollection();
+
 
     }
 
@@ -153,35 +154,31 @@ class Menu
     }
 
     /**
-     * @return Collection|LigneCommande[]
+     * @return Collection|LigneCommandeMenu[]
      */
-    public function getLigneCommandes(): Collection
+    public function getLigneCommandeMenus(): Collection
     {
-        return $this->ligneCommandes;
+        return $this->ligneCommandeMenus;
     }
 
-    public function addLigneCommande(LigneCommande $ligneCommande): self
+    public function addLigneCommandeMenu(LigneCommandeMenu $ligneCommandeMenu): self
     {
-        if (!$this->ligneCommandes->contains($ligneCommande)) {
-            $this->ligneCommandes[] = $ligneCommande;
-            $ligneCommande->setIdMenu($this);
+        if (!$this->ligneCommandeMenus->contains($ligneCommandeMenu)) {
+            $this->ligneCommandeMenus[] = $ligneCommandeMenu;
+            $ligneCommandeMenu->addMenu($this);
         }
 
         return $this;
     }
 
-    public function removeLigneCommande(LigneCommande $ligneCommande): self
+    public function removeLigneCommandeMenu(LigneCommandeMenu $ligneCommandeMenu): self
     {
-        if ($this->ligneCommandes->removeElement($ligneCommande)) {
-            // set the owning side to null (unless already changed)
-            if ($ligneCommande->getIdMenu() === $this) {
-                $ligneCommande->setIdMenu(null);
-            }
+        if ($this->ligneCommandeMenus->removeElement($ligneCommandeMenu)) {
+            $ligneCommandeMenu->removeMenu($this);
         }
 
         return $this;
     }
-
 
 
 }

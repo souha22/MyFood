@@ -34,22 +34,29 @@ class Produit
      */
     private $quantite;
 
-    /**
-     * @ORM\OneToMany(targetEntity=LigneCommande::class, mappedBy="id_produit")
-     */
-    private $ligneCommandes;
+
 
     /**
      * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="produits")
      */
     private $categorie;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=LigneCommandeProduit::class, mappedBy="produit")
+     */
+    private $ligneCommandeProduits;
 
     public function __construct()
     {
-        $this->ligneCommandes = new ArrayCollection();
+        $this->ligneCommandeProduits = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -92,35 +99,6 @@ class Produit
         return $this;
     }
 
-    /**
-     * @return Collection|LigneCommande[]
-     */
-    public function getLigneCommandes(): Collection
-    {
-        return $this->ligneCommandes;
-    }
-
-    public function addLigneCommande(LigneCommande $ligneCommande): self
-    {
-        if (!$this->ligneCommandes->contains($ligneCommande)) {
-            $this->ligneCommandes[] = $ligneCommande;
-            $ligneCommande->setIdProduit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLigneCommande(LigneCommande $ligneCommande): self
-    {
-        if ($this->ligneCommandes->removeElement($ligneCommande)) {
-            // set the owning side to null (unless already changed)
-            if ($ligneCommande->getIdProduit() === $this) {
-                $ligneCommande->setIdProduit(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getCategorie(): ?Categorie
     {
@@ -130,6 +108,45 @@ class Produit
     public function setCategorie(?Categorie $categorie): self
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LigneCommandeProduit[]
+     */
+    public function getLigneCommandeProduits(): Collection
+    {
+        return $this->ligneCommandeProduits;
+    }
+
+    public function addLigneCommandeProduit(LigneCommandeProduit $ligneCommandeProduit): self
+    {
+        if (!$this->ligneCommandeProduits->contains($ligneCommandeProduit)) {
+            $this->ligneCommandeProduits[] = $ligneCommandeProduit;
+            $ligneCommandeProduit->addProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneCommandeProduit(LigneCommandeProduit $ligneCommandeProduit): self
+    {
+        if ($this->ligneCommandeProduits->removeElement($ligneCommandeProduit)) {
+            $ligneCommandeProduit->removeProduit($this);
+        }
 
         return $this;
     }

@@ -49,6 +49,16 @@ class Recette
      */
     private $id_avis;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $nbrLike;
+
     public function __construct()
     {
         $this->id_ingredient = new ArrayCollection();
@@ -177,6 +187,30 @@ class Recette
                 $idAvi->setRecette(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getNbrLike(): ?int
+    {
+        return $this->nbrLike;
+    }
+
+    public function setNbrLike(int $nbrLike): self
+    {
+        $this->nbrLike = $nbrLike;
 
         return $this;
     }
