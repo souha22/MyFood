@@ -12,10 +12,14 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
+
+/**
+ * @Route("/produit", name="produit")
+ */
 class ProduitController extends AbstractController
 {
     /**
-     * @Route("/produit", name="produit")
+     * @Route("/index", name="produit")
      */
     public function index(): Response
     {
@@ -28,7 +32,7 @@ class ProduitController extends AbstractController
     /**
      * @Route("/getAll", name="pageproduit", methods ={"get"})
      */
-    public  function getAllProduct(ProduitRepository $repository): Response
+    public function getAllProduct(ProduitRepository $repository): Response
     {
         $list = $repository->findAll();
         $encoders = array(new JsonEncoder());
@@ -45,7 +49,7 @@ class ProduitController extends AbstractController
     }
 
     /**
-     * @Route("/addProduct/", name="addProduct")
+     * @Route("/add", name="addProduct",methods ={"POST"})
      */
     public function addProduct(Request $request): Response
     {
