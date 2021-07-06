@@ -25,19 +25,14 @@ class LigneCommandeMenu
     private $quantite;
 
     /**
-     * @ORM\ManyToMany(targetEntity=menu::class, inversedBy="ligneCommandeMenus")
+     * @ORM\ManyToOne(targetEntity=menu::class, inversedBy="commande")
      */
     private $menu;
 
     /**
-     * @ORM\ManyToOne(targetEntity=commande::class, inversedBy="ligneCommandeMenus")
+     * @ORM\ManyToOne(targetEntity=Commande::class, inversedBy="lignecommandemenus")
      */
     private $commande;
-
-    public function __construct()
-    {
-        $this->menu = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -56,39 +51,29 @@ class LigneCommandeMenu
         return $this;
     }
 
-    /**
-     * @return Collection|menu[]
-     */
-    public function getMenu(): Collection
+    public function getMenu(): ?menu
     {
         return $this->menu;
     }
 
-    public function addMenu(menu $menu): self
+    public function setMenu(?menu $menu): self
     {
-        if (!$this->menu->contains($menu)) {
-            $this->menu[] = $menu;
-        }
+        $this->menu = $menu;
 
         return $this;
     }
 
-    public function removeMenu(menu $menu): self
-    {
-        $this->menu->removeElement($menu);
-
-        return $this;
-    }
-
-    public function getCommande(): ?commande
+    public function getCommande(): ?Commande
     {
         return $this->commande;
     }
 
-    public function setCommande(?commande $commande): self
+    public function setCommande(?Commande $commande): self
     {
         $this->commande = $commande;
 
         return $this;
     }
+
+
 }

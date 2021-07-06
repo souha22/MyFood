@@ -25,19 +25,14 @@ class LigneCommandeProduit
     private $quantite;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Produit::class, inversedBy="ligneCommandeProduits")
+     * @ORM\ManyToOne(targetEntity=Produit::class, inversedBy="lignecommandeproduits")
      */
     private $produit;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Commande::class, inversedBy="ligneCommandeProduits")
+     * @ORM\ManyToOne(targetEntity=Commande::class, inversedBy="lignecommandeproduits")
      */
     private $commande;
-
-    public function __construct()
-    {
-        $this->produit = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -56,39 +51,28 @@ class LigneCommandeProduit
         return $this;
     }
 
-    /**
-     * @return Collection|produit[]
-     */
-    public function getProduit(): Collection
+    public function getProduit(): ?Produit
     {
         return $this->produit;
     }
 
-    public function addProduit(produit $produit): self
+    public function setProduit(?Produit $produit): self
     {
-        if (!$this->produit->contains($produit)) {
-            $this->produit[] = $produit;
-        }
+        $this->produit = $produit;
 
         return $this;
     }
 
-    public function removeProduit(produit $produit): self
-    {
-        $this->produit->removeElement($produit);
-
-        return $this;
-    }
-
-    public function getCommande(): ?commande
+    public function getCommande(): ?Commande
     {
         return $this->commande;
     }
 
-    public function setCommande(?commande $commande): self
+    public function setCommande(?Commande $commande): self
     {
         $this->commande = $commande;
 
         return $this;
     }
+
 }

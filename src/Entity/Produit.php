@@ -34,28 +34,25 @@ class Produit
      */
     private $quantite;
 
-
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="produits")
-     */
-    private $categorie;
-
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $image;
 
     /**
-     * @ORM\ManyToMany(targetEntity=LigneCommandeProduit::class, mappedBy="produit")
+     * @ORM\OneToMany(targetEntity=Lignecommandeproduit::class, mappedBy="produit")
      */
-    private $ligneCommandeProduits;
+    private $lignecommandeproduits;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="produit")
+     */
+    private $categorie;
 
     public function __construct()
     {
-        $this->ligneCommandeProduits = new ArrayCollection();
+        $this->lignecommandeproduits = new ArrayCollection();
     }
-
 
 
     public function getId(): ?int
@@ -99,19 +96,6 @@ class Produit
         return $this;
     }
 
-
-    public function getCategorie(): ?Categorie
-    {
-        return $this->categorie;
-    }
-
-    public function setCategorie(?Categorie $categorie): self
-    {
-        $this->categorie = $categorie;
-
-        return $this;
-    }
-
     public function getImage(): ?string
     {
         return $this->image;
@@ -125,31 +109,45 @@ class Produit
     }
 
     /**
-     * @return Collection|LigneCommandeProduit[]
+     * @return Collection|Lignecommandeproduit[]
      */
-    public function getLigneCommandeProduits(): Collection
+    public function getLignecommandeproduits(): Collection
     {
-        return $this->ligneCommandeProduits;
+        return $this->lignecommandeproduits;
     }
 
-    public function addLigneCommandeProduit(LigneCommandeProduit $ligneCommandeProduit): self
+    public function addLignecommandeproduit(Lignecommandeproduit $lignecommandeproduit): self
     {
-        if (!$this->ligneCommandeProduits->contains($ligneCommandeProduit)) {
-            $this->ligneCommandeProduits[] = $ligneCommandeProduit;
-            $ligneCommandeProduit->addProduit($this);
+        if (!$this->lignecommandeproduits->contains($lignecommandeproduit)) {
+            $this->lignecommandeproduits[] = $lignecommandeproduit;
+            $lignecommandeproduit->setProduit($this);
         }
 
         return $this;
     }
 
-    public function removeLigneCommandeProduit(LigneCommandeProduit $ligneCommandeProduit): self
+    public function removeLignecommandeproduit(Lignecommandeproduit $lignecommandeproduit): self
     {
-        if ($this->ligneCommandeProduits->removeElement($ligneCommandeProduit)) {
-            $ligneCommandeProduit->removeProduit($this);
+        if ($this->lignecommandeproduits->removeElement($lignecommandeproduit)) {
+            // set the owning side to null (unless already changed)
+            if ($lignecommandeproduit->getProduit() === $this) {
+                $lignecommandeproduit->setProduit(null);
+            }
         }
 
         return $this;
     }
 
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): self
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
 
 }

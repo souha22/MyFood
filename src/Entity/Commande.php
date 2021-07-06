@@ -35,33 +35,32 @@ class Commande
     private $statut;
 
 
-
     /**
      * @ORM\OneToOne(targetEntity=Livraison::class, cascade={"persist", "remove"})
      */
     private $id_livraison;
 
-    /**
-     * @ORM\OneToMany(targetEntity=LigneCommandeMenu::class, mappedBy="commande")
-     */
-    private $ligneCommandeMenus;
-
-    /**
-     * @ORM\OneToMany(targetEntity=LigneCommandeProduit::class, mappedBy="commande")
-     */
-    private $ligneCommandeProduits;
 
     /**
      * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="commandes")
      */
     private $utilisateur;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Lignecommandemenu::class, mappedBy="commande")
+     */
+    private $lignecommandemenus;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Lignecommandeproduit::class, mappedBy="commande")
+     */
+    private $lignecommandeproduits;
+
     public function __construct()
     {
-        $this->ligneCommandeMenus = new ArrayCollection();
-        $this->ligneCommandeProduits = new ArrayCollection();
+        $this->lignecommandemenus = new ArrayCollection();
+        $this->lignecommandeproduits = new ArrayCollection();
     }
-
 
 
     public function getId(): ?int
@@ -105,8 +104,6 @@ class Commande
         return $this;
     }
 
-
-
     public function getIdLivraison(): ?livraison
     {
         return $this->id_livraison;
@@ -119,66 +116,6 @@ class Commande
         return $this;
     }
 
-    /**
-     * @return Collection|LigneCommandeMenu[]
-     */
-    public function getLigneCommandeMenus(): Collection
-    {
-        return $this->ligneCommandeMenus;
-    }
-
-    public function addLigneCommandeMenu(LigneCommandeMenu $ligneCommandeMenu): self
-    {
-        if (!$this->ligneCommandeMenus->contains($ligneCommandeMenu)) {
-            $this->ligneCommandeMenus[] = $ligneCommandeMenu;
-            $ligneCommandeMenu->setCommande($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLigneCommandeMenu(LigneCommandeMenu $ligneCommandeMenu): self
-    {
-        if ($this->ligneCommandeMenus->removeElement($ligneCommandeMenu)) {
-            // set the owning side to null (unless already changed)
-            if ($ligneCommandeMenu->getCommande() === $this) {
-                $ligneCommandeMenu->setCommande(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|LigneCommandeProduit[]
-     */
-    public function getLigneCommandeProduits(): Collection
-    {
-        return $this->ligneCommandeProduits;
-    }
-
-    public function addLigneCommandeProduit(LigneCommandeProduit $ligneCommandeProduit): self
-    {
-        if (!$this->ligneCommandeProduits->contains($ligneCommandeProduit)) {
-            $this->ligneCommandeProduits[] = $ligneCommandeProduit;
-            $ligneCommandeProduit->setCommande($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLigneCommandeProduit(LigneCommandeProduit $ligneCommandeProduit): self
-    {
-        if ($this->ligneCommandeProduits->removeElement($ligneCommandeProduit)) {
-            // set the owning side to null (unless already changed)
-            if ($ligneCommandeProduit->getCommande() === $this) {
-                $ligneCommandeProduit->setCommande(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getUtilisateur(): ?utilisateur
     {
         return $this->utilisateur;
@@ -187,6 +124,66 @@ class Commande
     public function setUtilisateur(?utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Lignecommandemenu[]
+     */
+    public function getLignecommandemenus(): Collection
+    {
+        return $this->lignecommandemenus;
+    }
+
+    public function addLignecommandemenu(Lignecommandemenu $lignecommandemenu): self
+    {
+        if (!$this->lignecommandemenus->contains($lignecommandemenu)) {
+            $this->lignecommandemenus[] = $lignecommandemenu;
+            $lignecommandemenu->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLignecommandemenu(Lignecommandemenu $lignecommandemenu): self
+    {
+        if ($this->lignecommandemenus->removeElement($lignecommandemenu)) {
+            // set the owning side to null (unless already changed)
+            if ($lignecommandemenu->getCommande() === $this) {
+                $lignecommandemenu->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Lignecommandeproduit[]
+     */
+    public function getLignecommandeproduits(): Collection
+    {
+        return $this->lignecommandeproduits;
+    }
+
+    public function addLignecommandeproduit(Lignecommandeproduit $lignecommandeproduit): self
+    {
+        if (!$this->lignecommandeproduits->contains($lignecommandeproduit)) {
+            $this->lignecommandeproduits[] = $lignecommandeproduit;
+            $lignecommandeproduit->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLignecommandeproduit(Lignecommandeproduit $lignecommandeproduit): self
+    {
+        if ($this->lignecommandeproduits->removeElement($lignecommandeproduit)) {
+            // set the owning side to null (unless already changed)
+            if ($lignecommandeproduit->getCommande() === $this) {
+                $lignecommandeproduit->setCommande(null);
+            }
+        }
 
         return $this;
     }

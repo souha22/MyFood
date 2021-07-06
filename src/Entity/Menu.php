@@ -40,29 +40,28 @@ class Menu
     private $prix;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Restaurant::class, inversedBy="id_menu")
+     * @ORM\OneToMany(targetEntity=Offre::class, mappedBy="menu")
      */
-    private $id_restaurant;
+    private $offre;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Offre::class, inversedBy="id_menus")
+     * @ORM\ManyToOne(targetEntity=Restaurant::class, inversedBy="menu")
      */
-    private $id_offre;
+    private $restaurant;
 
     /**
-     * @ORM\ManyToMany(targetEntity=LigneCommandeMenu::class, mappedBy="menu")
+     * @ORM\OneToMany(targetEntity=Lignecommandemenu::class, mappedBy="menu")
      */
-    private $ligneCommandeMenus;
-
+    private $lignecommandemenus;
 
 
     public function __construct()
     {
-        $this->id_offre = new ArrayCollection();
-        $this->ligneCommandeMenus = new ArrayCollection();
-
+        $this->offre = new ArrayCollection();
+        $this->lignecommandemenus = new ArrayCollection();
 
     }
+
 
     public function getId(): ?int
     {
@@ -117,68 +116,73 @@ class Menu
         return $this;
     }
 
-    public function getIdRestaurant(): ?restaurant
+    public function getOffre(): ?offre
     {
-        return $this->id_restaurant;
+        return $this->offre;
     }
 
-    public function setIdRestaurant(?restaurant $id_restaurant): self
+    public function addOffre(offre $offre): self
     {
-        $this->id_restaurant = $id_restaurant;
+        if (!$this->offre->contains($offre)) {
+            $this->offre[] = $offre;
+            $offre->setMenu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffre(offre $offre): self
+    {
+        if ($this->offre->removeElement($offre)) {
+            // set the owning side to null (unless already changed)
+            if ($offre->getMenu() === $this) {
+                $offre->setMenu(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): self
+    {
+        $this->restaurant = $restaurant;
 
         return $this;
     }
 
     /**
-     * @return Collection|offre[]
+     * @return Collection|Lignecommandemenu[]
      */
-    public function getIdOffre(): Collection
+    public function getLignecommandemenus(): Collection
     {
-        return $this->id_offre;
+        return $this->lignecommandemenus;
     }
 
-    public function addIdOffre(offre $idOffre): self
+    public function addlignecommandemenus(Lignecommandemenu $lignecommandemenus): self
     {
-        if (!$this->id_offre->contains($idOffre)) {
-            $this->id_offre[] = $idOffre;
+        if (!$this->lignecommandemenus->contains($lignecommandemenus)) {
+            $this->lignecommandemenus[] = $lignecommandemenus;
+            $lignecommandemenus->setMenu($this);
         }
 
         return $this;
     }
 
-    public function removeIdOffre(offre $idOffre): self
+    public function removeLignecommandemenus(Lignecommandemenu $lignecommandemenus): self
     {
-        $this->id_offre->removeElement($idOffre);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|LigneCommandeMenu[]
-     */
-    public function getLigneCommandeMenus(): Collection
-    {
-        return $this->ligneCommandeMenus;
-    }
-
-    public function addLigneCommandeMenu(LigneCommandeMenu $ligneCommandeMenu): self
-    {
-        if (!$this->ligneCommandeMenus->contains($ligneCommandeMenu)) {
-            $this->ligneCommandeMenus[] = $ligneCommandeMenu;
-            $ligneCommandeMenu->addMenu($this);
+        if ($this->commande->removeElement($lignecommandemenus)) {
+            // set the owning side to null (unless already changed)
+            if ($lignecommandemenus->getMenu() === $this) {
+                $lignecommandemenus->setMenu(null);
+            }
         }
 
         return $this;
     }
-
-    public function removeLigneCommandeMenu(LigneCommandeMenu $ligneCommandeMenu): self
-    {
-        if ($this->ligneCommandeMenus->removeElement($ligneCommandeMenu)) {
-            $ligneCommandeMenu->removeMenu($this);
-        }
-
-        return $this;
-    }
-
 
 }
