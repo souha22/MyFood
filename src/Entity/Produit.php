@@ -40,7 +40,7 @@ class Produit
     private $image;
 
     /**
-     * @ORM\OneToMany(targetEntity=Lignecommandeproduit::class, mappedBy="produit")
+     * @ORM\OneToMany(targetEntity=LigneCommandeProduit::class, mappedBy="produit")
      */
     private $lignecommandeproduits;
 

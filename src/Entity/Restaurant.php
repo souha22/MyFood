@@ -40,7 +40,7 @@ class Restaurant
     private $id_manager;
 
     /**
-     * @ORM\OneToMany(targetEntity=menu::class, mappedBy="restaurant")
+     * @ORM\OneToMany(targetEntity=Menu::class, mappedBy="restaurant")
      */
     private $menu;
 

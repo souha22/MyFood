@@ -25,7 +25,7 @@ class LigneCommandeMenu
     private $quantite;
 
     /**
-     * @ORM\ManyToOne(targetEntity=menu::class, inversedBy="commande")
+     * @ORM\ManyToOne(targetEntity=Menu::class, inversedBy="commande")
      */
     private $menu;
 

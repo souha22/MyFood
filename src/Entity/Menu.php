@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=MenuRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\MenuRepository", repositoryClass=MenuRepository::class)
  */
 class Menu
 {
@@ -42,7 +42,7 @@ class Menu
     /**
      * @ORM\OneToMany(targetEntity=Offre::class, mappedBy="menu")
      */
-    private $offre;
+    private $offer;
 
     /**
      * @ORM\ManyToOne(targetEntity=Restaurant::class, inversedBy="menu")
@@ -50,14 +50,14 @@ class Menu
     private $restaurant;
 
     /**
-     * @ORM\OneToMany(targetEntity=Lignecommandemenu::class, mappedBy="menu")
+     * @ORM\OneToMany(targetEntity=LigneCommandeMenu::class, mappedBy="menu")
      */
     private $lignecommandemenus;
 
 
     public function __construct()
     {
-        $this->offre = new ArrayCollection();
+        $this->offer = new ArrayCollection();
         $this->lignecommandemenus = new ArrayCollection();
 
     }
@@ -116,15 +116,15 @@ class Menu
         return $this;
     }
 
-    public function getOffre(): ?offre
+    public function getOffer(): Collection
     {
-        return $this->offre;
+        return $this->offer;
     }
 
     public function addOffre(offre $offre): self
     {
-        if (!$this->offre->contains($offre)) {
-            $this->offre[] = $offre;
+        if (!$this->offer->contains($offre)) {
+            $this->offer[] = $offre;
             $offre->setMenu($this);
         }
 
@@ -133,7 +133,7 @@ class Menu
 
     public function removeOffre(offre $offre): self
     {
-        if ($this->offre->removeElement($offre)) {
+        if ($this->offer->removeElement($offre)) {
             // set the owning side to null (unless already changed)
             if ($offre->getMenu() === $this) {
                 $offre->setMenu(null);

@@ -47,12 +47,12 @@ class Commande
     private $utilisateur;
 
     /**
-     * @ORM\OneToMany(targetEntity=Lignecommandemenu::class, mappedBy="commande")
+     * @ORM\OneToMany(targetEntity=LigneCommandeMenu::class, mappedBy="commande")
      */
     private $lignecommandemenus;
 
     /**
-     * @ORM\OneToMany(targetEntity=Lignecommandeproduit::class, mappedBy="commande")
+     * @ORM\OneToMany(targetEntity=LigneCommandeProduit::class, mappedBy="commande")
      */
     private $lignecommandeproduits;
 
