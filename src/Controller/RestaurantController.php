@@ -58,7 +58,7 @@ class RestaurantController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{id}", name="courses_delete", methods={"DELETE"})
+     * @Route("/delete/{id}", name="restaurant_delete", methods={"DELETE"})
      * @param int $id
      * @param RestaurantRepository $repository
      * @return Response
@@ -69,11 +69,12 @@ class RestaurantController extends AbstractController
     }
 
 
-    /**
+   /**
      * @Route("/{id}", name="chapter_getByCourses", methods={"GET"})
      * @param MenuRepository $repository
      * @return Response
      */
+   /**
     public function getChapterAction(MenuRepository  $menuRepository, RestaurantRepository $restaurantRepository, $id, SerializerInterface $serializer): Response
     {
         $restaurant=$restaurantRepository->find($id);
@@ -85,7 +86,7 @@ class RestaurantController extends AbstractController
         ]);
         $response = new Response($data, Response::HTTP_OK);
         return $this->restService->prepareResponse($response);
-    }
+    }*/
 
 
 

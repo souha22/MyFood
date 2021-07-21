@@ -5,14 +5,21 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
+
 class RestServiceController extends AbstractController
 {
+
+
+
     /**
      * @param mixed $objectRepository
      */
@@ -23,27 +30,40 @@ class RestServiceController extends AbstractController
         $data = $serializer->serialize($list, 'json',[
             'circular_reference_handler' => function ($object) {
                 return $object->getId();
+
             }
+
         ]);
         $response = new Response($data, Response::HTTP_OK);
 
         return $this->prepareResponse($response);
     }
-
     /**
      * @param Request $request
      * @param string $className
      * @return Response
      */
-    public function createAction(Request $request, string $className): Response
+    public function createAction(Request $request, string $className)
+
     {
-        $objectToPersist= $this->returnNormalized($request->getContent(), $className);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($objectToPersist);
-        $em->flush();
-        $response = new Response('', Response::HTTP_CREATED);
-        return $this->prepareResponse($response);
-    }
+        $normalizer = new ObjectNormalizer(null, null, null, new ReflectionExtractor());
+
+
+        $data = $request->getContent();
+            $encoders = array(new JsonEncoder());
+            $serializer = new Serializer([new DateTimeNormalizer(), $normalizer], $encoders);
+            $p = $serializer->deserialize($data, $className, 'json', []);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($p);
+            $em->flush();
+            $response = new Response('', Response::HTTP_CREATED);
+            //Allow all websites
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            // You can set the allowed methods too, if you want
+            $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, PATCH, OPTIONS');
+            return $response;
+        }
+
 
     /**
      * @param mixed $objectUpdate
